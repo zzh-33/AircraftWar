@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+
+abstract class AbstractAircraft {
+}
+
+class HeroAircraft <<Singleton>> {
+    - {static} volatile heroAircraft : HeroAircraft
+    - HeroAircraft(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+    + {static} getHeroAircraft() : HeroAircraft
+}
+
+AbstractAircraft <|-- HeroAircraft
+HeroAircraft "1" *--> "1" HeroAircraft : 持有唯一实例
+
+@enduml

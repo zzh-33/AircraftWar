@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class AbstractEnemy {}
+
+class MobEnemy extends AbstractEnemy {}
+class BossEnemy extends AbstractEnemy {}
+class EliteEnemy extends AbstractEnemy {}
+class ElitePlusEnemy extends AbstractEnemy {}
+class EliteProEnemy extends AbstractEnemy {}
+
+interface EnemyFactory {
+    +{abstract}createEnemy(x, y, spx, spy, hp, shootStrategy): AbstractEnemy
+}
+EnemyFactory ...> AbstractEnemy
+
+class MobEnemyFactory implements EnemyFactory {
+    +createEnemy(x, y, spx, spy, hp, shootStrategy): AbstractEnemy
+}
+
+class BossEnemyFactory implements EnemyFactory {
+    +createEnemy(x, y, spx, spy, hp, shootStrategy): AbstractEnemy
+}
+
+class EliteEnemyFactory implements EnemyFactory {
+    +createEnemy(x, y, spx, spy, hp, shootStrategy): AbstractEnemy
+}
+
+class ElitePlusEnemyFactory implements EnemyFactory {
+    +createEnemy(x, y, spx, spy, hp, shootStrategy): AbstractEnemy
+}
+
+class EliteProEnemyFactory implements EnemyFactory {
+    +createEnemy(x, y, spx, spy, hp, shootStrategy): AbstractEnemy
+}
+
+@enduml
