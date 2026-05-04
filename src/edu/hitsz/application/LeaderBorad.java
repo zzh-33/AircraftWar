@@ -37,8 +37,8 @@ public class LeaderBorad {
                     int result = JOptionPane.showConfirmDialog(null, "确认删除第" + (row + 1) + "条记录吗？", "确认", JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
                         model.removeRow(row);
+                        game.gameDao.deleteGameInfoLog(row);
                     }
-                    game.gameDao.deleteGameInfoLog(row);
                 } else {
                     JOptionPane.showMessageDialog(null, "请选择要删除的记录", "提示", JOptionPane.INFORMATION_MESSAGE);
                 }

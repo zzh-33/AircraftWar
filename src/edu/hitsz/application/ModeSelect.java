@@ -26,34 +26,45 @@ public class ModeSelect {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImageManager.SECLECTED_BACKGROUND_IMAGE = ImageManager.BACKGROUND_IMAGE;
-                Main.cardLayout.show(Main.cardPanel, "game");
-                game.gameInfo.setGameMode("easy");
-                game.action();
+                startGame("easy");
             }
         });
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImageManager.SECLECTED_BACKGROUND_IMAGE = ImageManager.BACKGROUND_IMAGE_2;
-                Main.cardLayout.show(Main.cardPanel, "game");
-                game.gameInfo.setGameMode("simple");
-                game.action();
+                startGame("simple");
             }
         });
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImageManager.SECLECTED_BACKGROUND_IMAGE = ImageManager.BACKGROUND_IMAGE_3;
-                Main.cardLayout.show(Main.cardPanel, "game");
-                game.gameInfo.setGameMode("hard");
-                game.action();
+                startGame("hard");
             }
         });
     }
 
     public JPanel getMainPanel() {
         return MainPanel;
+    }
+
+    private void startGame(String gameMode) {
+        switch (gameMode) {
+            case "easy":
+                ImageManager.SECLECTED_BACKGROUND_IMAGE = ImageManager.BACKGROUND_IMAGE;
+                break;
+            case "simple":
+                ImageManager.SECLECTED_BACKGROUND_IMAGE = ImageManager.BACKGROUND_IMAGE_2;
+                break;
+            case "hard":
+                ImageManager.SECLECTED_BACKGROUND_IMAGE = ImageManager.BACKGROUND_IMAGE_3;
+                break;
+            default:
+                break;
+        }
+        Main.cardLayout.show(Main.cardPanel, "game");
+        game.gameInfo.setGameMode(gameMode);
+        game.audioManager.startBgm();
+        game.action();
     }
 
 }

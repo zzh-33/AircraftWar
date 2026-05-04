@@ -66,6 +66,9 @@ public class Game extends JPanel {
     public GameInfoLog gameInfo;
     public GameDaoImpl gameDao;
 
+    //背景音乐
+    public final AudioManager audioManager;
+
     public Game() {
         gameInfo = new GameInfoLog();
         gameDao = new GameDaoImpl();
@@ -76,6 +79,8 @@ public class Game extends JPanel {
         heroBullets = new LinkedList<>();
         enemyBullets = new LinkedList<>();
         props = new LinkedList<>();
+
+        audioManager = AudioManager.getAudioManager();
 
         //启动英雄机鼠标监听
         new HeroController(this, heroAircraft);
@@ -552,6 +557,8 @@ public class Game extends JPanel {
             gameDao.saveGameInfoLog(gameInfo);
             gameDao.getAllGameInfoLogs(gameInfo.getGameMode());
 
+            LeaderBorad leaderBorad = new LeaderBorad(this);
+            Main.cardPanel.add(leaderBorad.getMainPanel(), "leaderBorad");
             Main.cardLayout.show(Main.cardPanel, "leaderBorad");
         }
     };

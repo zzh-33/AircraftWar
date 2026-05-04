@@ -32,11 +32,9 @@ public class Main {
 
         Game game = new Game();
         ModeSelect modeSelect = new ModeSelect(game);
-        LeaderBorad leaderBorad = new LeaderBorad(game);
         frame.add(cardPanel);
         cardPanel.add(modeSelect.getMainPanel(), "modeSelect");
         cardPanel.add(game, "game");
-        cardPanel.add(leaderBorad.getMainPanel(), "leaderBorad");
         frame.setVisible(true);
     }
 }
