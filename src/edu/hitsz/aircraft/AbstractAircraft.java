@@ -49,10 +49,6 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
         this.speedY = speedY;
     }
 
-    public void setShootStrategy(ShootStrategy shootStrategy) {
-        this.shootStrategy = shootStrategy;
-    }
-
     public abstract List<BaseBullet> executeShootStrategy();
 
 }

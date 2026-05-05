@@ -23,6 +23,10 @@ public class HeroAircraft extends AbstractAircraft {
 
     private volatile static HeroAircraft heroAircraft;
 
+    private long propEffectStartTime = 0;
+    private long propEffectDuration = 0;
+    private static final long PROP_EFFECT_DURATION = 5000;
+
     private HeroAircraft(
             int locationX,
             int locationY,
@@ -56,6 +60,38 @@ public class HeroAircraft extends AbstractAircraft {
     public void forward() {
         // 英雄机由鼠标控制，不通过forward函数移动
     }
+
+    public void setShootStrategy(ShootStrategy shootStrategy){
+        this.shootStrategy = shootStrategy;
+
+        this.propEffectStartTime = System.currentTimeMillis();
+        this.propEffectDuration = PROP_EFFECT_DURATION;
+    }
+
+    public void updatePropEffect(){
+        if(propEffectStartTime == 0){
+            return;
+        }
+
+        if(System.currentTimeMillis() - propEffectStartTime > propEffectDuration){
+            this.shootStrategy = new HeroDirectShoot();
+
+            propEffectStartTime = 0;
+            propEffectDuration = 0;
+        }
+    }
+
+    public boolean isPropEffect(){
+        return propEffectStartTime != 0;
+    }
+
+    public long getRemainPropEffectTime(){
+        if(propEffectStartTime == 0){
+            return 0;
+        }
+        return propEffectDuration - (System.currentTimeMillis() - propEffectStartTime);
+    }
+
 
     @Override
     public List<BaseBullet> executeShootStrategy() {

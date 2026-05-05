@@ -16,12 +16,12 @@ public class AudioManager {
     private volatile boolean isGameRunning = false;
     private volatile boolean isBossActive = false;
 
-    private static final String BGM_PATH = "src/videos/bgm.wav";
-    private static final String BOSS_BGM_PATH = "src/videos/bgm_boss.wav";
-    private static final String BOMB_EXPLOSION_SOUND_PATH = "src/videos/bomb_explosion.wav";
-    private static final String BULLET_HIT_SOUND_PATH = "src/videos/bullet_hit.wav";
-    private static final String GAME_OVER_SOUND_PATH = "src/videos/game_over.wav";
-    private static final String GET_SUPPLY_SOUND_PATH = "src/videos/get_supply.wav";
+    private static final String BGM_PATH = "/videos/bgm.wav";
+    private static final String BOSS_BGM_PATH = "/videos/bgm_boss.wav";
+    private static final String BOMB_EXPLOSION_SOUND_PATH = "/videos/bomb_explosion.wav";
+    private static final String BULLET_HIT_SOUND_PATH = "/videos/bullet_hit.wav";
+    private static final String GAME_OVER_SOUND_PATH = "/videos/game_over.wav";
+    private static final String GET_SUPPLY_SOUND_PATH = "/videos/get_supply.wav";
 
     private AudioManager() {
         soundPool = Executors.newCachedThreadPool();
@@ -58,6 +58,13 @@ public class AudioManager {
 
         stopBgm();
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+
         bossBgmThread = new Thread(() -> {
             while (isBossActive && !Thread.currentThread().isInterrupted()) {
                 playLoopAudio(BOSS_BGM_PATH);
@@ -70,8 +77,14 @@ public class AudioManager {
 
     public void stopBgm() {
         isGameRunning = false;
-        if (bgmThread != null && bgmThread.isAlive()) {
+        if (bgmThread != null) {
             bgmThread.interrupt();
+            try {
+                bgmThread.join(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -83,12 +96,6 @@ public class AudioManager {
         startBgm();
     }
 
-    public void stopAllBgm() {
-        stopBgm();
-        stopBossBgm();
-        soundPool.shutdown();
-    }
-
     public void playBombExplosionSound() {
         playSound(BOMB_EXPLOSION_SOUND_PATH);
     }
@@ -98,7 +105,19 @@ public class AudioManager {
     }
 
     public void playGameOverSound() {
+        isGameRunning = false;
+        isBossActive = false;
+
+        if (bossBgmThread != null && bossBgmThread.isAlive()) {
+            bossBgmThread.interrupt();
+        }
+
+        if (bgmThread != null && bgmThread.isAlive()) {
+            bgmThread.interrupt();
+        }
+
         playSound(GAME_OVER_SOUND_PATH);
+        soundPool.shutdown();
     }
 
     public void playGetSupplySound() {
@@ -132,6 +151,7 @@ public class AudioManager {
     }
 
     private void playLoopAudio(String path) {
+        Clip clip = null;
         try {
             URL url = getClass().getResource(path);
             if (url == null) {
@@ -142,20 +162,23 @@ public class AudioManager {
             AudioFormat audioFormat = audioInputStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
 
-            Clip clip = (Clip) AudioSystem.getLine(info);
+            clip = (Clip) AudioSystem.getLine(info);
             clip.open(audioInputStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
             clip.start();
 
-            while (isGameRunning && !Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 Thread.sleep(100);
             }
 
-            clip.stop();
-            clip.close();
         } catch (Exception e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
+        } finally {
+            if (clip != null) {
+                clip.stop();
+                clip.close();
+            }
         }
     }
 }
